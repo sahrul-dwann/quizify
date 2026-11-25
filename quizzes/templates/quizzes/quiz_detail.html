@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ quiz.title }} - Quizify{% endblock %}
+
+{% block content %}
+<section class="detail-section">
+    <div class="container">
+        <a class="back-link" href="{% url 'quizzes:catalog' %}">&larr; Kembali ke katalog</a>
+        <div class="row align-items-center g-5 mt-2">
+            <div class="col-lg-7">
+                <span class="eyebrow">SIAPKAN DIRI, MULAI BERANI</span>
+                <h1 class="detail-title">{{ quiz.title }}</h1>
+                {% if quiz.description %}
+                    <p class="detail-copy">{{ quiz.description }}</p>
+                {% endif %}
+                {% if question_count %}
+                    <div class="quiz-facts">
+                        <span><strong>{{ question_count }}</strong> pertanyaan</span>
+                        <span><strong>10</strong> menit</span>
+                        <span><strong>1</strong> poin per jawaban benar</span>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'quizzes:start_quiz' quiz.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-primary btn-lg hero-cta" type="submit">
+                                Mulai kuis <span aria-hidden="true">&rarr;</span>
+                            </button>
+                        </form>
+                    {% else %}
+                        {% url 'quizzes:quiz_detail' quiz.id as detail_url %}
+                        <a
+                            class="btn btn-primary btn-lg hero-cta"
+                            href="{% url 'quizzes:login' %}?next={{ detail_url|urlencode }}">
+                            Masuk untuk mulai <span aria-hidden="true">&rarr;</span>
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <div class="empty-note">Kuis ini belum memiliki pertanyaan.</div>
+                {% endif %}
+            </div>
+            <div class="col-lg-5">
+                <aside class="detail-sidecard">
+                    <span class="detail-sidecard-mark" aria-hidden="true">Q</span>
+                    <span class="eyebrow">TANTANG DIRIMU</span>
+                    <h2>Satu kuis.<br>Banyak hal baru.</h2>
+                    <p>Kerjakan dengan tenang. Skormu akan tersimpan di riwayat akun.</p>
+                    <div class="detail-sidecard-bottom">
+                        <span>01</span><span class="detail-sidecard-line"></span><span>LEARN BY DOING</span>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

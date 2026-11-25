@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Hasil kuis - Quizify{% endblock %}
+
+{% block content %}
+<section class="result-section">
+    <div class="container">
+        <div class="result-card">
+            <span class="result-confetti result-confetti-one" aria-hidden="true">✦</span>
+            <span class="result-confetti result-confetti-two" aria-hidden="true">✧</span>
+            <div class="result-check" aria-hidden="true">✓</div>
+            <span class="eyebrow">LANGKAH HEBAT!</span>
+            <h1>Kuis selesai</h1>
+            <p class="result-quiz-title">{{ attempt.quiz.title }}</p>
+            <div class="result-score">
+                <strong>{{ attempt.score }}</strong>
+                <span>/ {{ attempt.total_questions }}</span>
+            </div>
+            <p class="result-copy">Skormu sudah tersimpan. Terus belajar dan tantang dirimu lagi!</p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a class="btn btn-primary btn-lg" href="{% url 'quizzes:attempt_history' %}">Lihat riwayat</a>
+                <a class="btn btn-outline-dark btn-lg" href="{% url 'quizzes:catalog' %}">Pilih kuis lain</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

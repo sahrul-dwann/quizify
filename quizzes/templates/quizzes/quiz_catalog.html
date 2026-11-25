@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Katalog kuis - Quizify{% endblock %}
+
+{% block content %}
+<section class="catalog-section">
+    <div class="container">
+        <div class="catalog-heading">
+            <div>
+                <span class="eyebrow">PILIH PETUALANGANMU</span>
+                <h1 class="section-title">Kuis yang bikin <span>penasaran.</span></h1>
+                <p class="section-copy">Pilih satu topik, tantang dirimu, lalu lihat hasilnya.</p>
+            </div>
+            <div class="catalog-count">
+                <strong>{{ quizzes|length }}</strong>
+                <span>kuis tersedia</span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for quiz in quizzes %}
+                <div class="col-md-6 col-lg-4">
+                    <article class="card quiz-card h-100">
+                        <div class="quiz-card-banner {% cycle 'quiz-card-banner-lilac' 'quiz-card-banner-peach' 'quiz-card-banner-mint' %}">
+                            <span class="quiz-card-symbol" aria-hidden="true">Q</span>
+                            <span class="quiz-card-index">QUIZIFY <span>{{ forloop.counter|stringformat:"02d" }}</span></span>
+                            <span class="quiz-card-spark" aria-hidden="true">✦</span>
+                        </div>
+                        <div class="card-body quiz-card-body">
+                            <span class="quiz-meta">{{ quiz.question_count }} SOAL <span aria-hidden="true">·</span> 10 MENIT</span>
+                            <h2 class="card-title">{{ quiz.title }}</h2>
+                            {% if quiz.description %}
+                                <p class="card-text quiz-description">{{ quiz.description }}</p>
+                            {% endif %}
+                            <a class="quiz-card-link" href="{% url 'quizzes:quiz_detail' quiz.id %}">
+                                Lihat detail <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="empty-state">
+                        <span class="empty-state-icon" aria-hidden="true">?</span>
+                        <h2>Belum ada kuis</h2>
+                        <p>Kuis baru akan muncul di sini. Coba mampir lagi nanti!</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

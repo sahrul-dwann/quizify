@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Kerjakan {{ quiz.title }} - Quizify{% endblock %}
+
+{% block content %}
+<section class="take-section">
+    <div class="container">
+        <div class="take-heading">
+            <div>
+                <span class="eyebrow">FOKUS, KAMU PASTI BISA</span>
+                <h1 class="take-title">{{ quiz.title }}</h1>
+                <p class="take-subtitle">{{ questions|length }} pertanyaan <span aria-hidden="true">·</span> Semangat mengerjakan!</p>
+            </div>
+            <div class="timer-panel" role="timer" aria-live="off">
+                <span class="timer-icon" aria-hidden="true">◷</span>
+                <div>
+                    <span class="timer-label">SISA WAKTU</span>
+                    <strong data-countdown data-remaining-seconds="{{ remaining_seconds }}">
+                        {{ remaining_time }}
+                    </strong>
+                </div>
+            </div>
+        </div>
+
+        <p class="save-status" role="status" data-save-status></p>
+        <form
+            method="post"
+            action="{% url 'quizzes:finish_attempt' attempt.id %}"
+            data-quiz-form
+            data-save-url="{% url 'quizzes:save_attempt_answer' attempt.id %}">
+            {% csrf_token %}
+            {% if form_error %}
+                <div class="alert alert-danger rounded-4" role="alert">{{ form_error }}</div>
+            {% endif %}
+            <nav class="question-navigation" aria-label="Navigasi soal">
+                <div>
+                    <span class="eyebrow">NAVIGASI SOAL</span>
+                    <p class="small text-secondary mb-0">Pilih nomor untuk berpindah.</p>
+                </div>
+                <div class="question-navigation-buttons">
+                    {% for question in questions %}
+                        <button
+                            class="question-jump"
+                            type="button"
+                            data-question-target="question_{{ question.id }}"
+                            aria-controls="question_{{ question.id }}"
+                            aria-label="Lompat ke soal {{ forloop.counter }}, belum dijawab">
+                            {{ forloop.counter|stringformat:"02d" }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </nav>
+            {% for question in questions %}
+                <fieldset
+                    class="question-card"
+                    id="question_{{ question.id }}"
+                    tabindex="-1">
+                    <legend class="question-legend">
+                        <span class="question-number">{{ forloop.counter|stringformat:"02d" }}</span>
+                        <span>{{ question.text }}</span>
+                    </legend>
+                    <div class="answer-list">
+                        {% for option in question.options.all %}
+                            <label class="quiz-option" for="option_{{ option.id }}">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="question_{{ question.id }}"
+                                    id="option_{{ option.id }}"
+                                    value="{{ option.id }}"
+                                    required
+                                    {% if option.id in selected_option_ids %}checked{% endif %}>
+                                <span>{{ option.text }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            {% endfor %}
+            <div class="take-submit-row">
+                <span>Periksa jawabanmu sebelum dikirim.</span>
+                <button class="btn btn-primary btn-lg hero-cta" type="submit">
+                    Kirim jawaban <span aria-hidden="true">&rarr;</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/quiz_navigation.js' %}" defer></script>
+{% endblock %}

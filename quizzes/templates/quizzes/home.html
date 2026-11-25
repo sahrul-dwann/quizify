@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Quizify - Belajar lewat kuis{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="container hero-container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="eyebrow"><span class="eyebrow-dot"></span> BELAJAR DENGAN CARA BARU</span>
+                <h1 class="hero-title">
+                    Bikin belajar<br>
+                    <span>lebih seru.</span>
+                </h1>
+                <p class="hero-copy">
+                    Uji rasa ingin tahumu, tantang dirimu dengan kuis singkat,
+                    dan lihat seberapa jauh kamu berkembang.
+                </p>
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    <a class="btn btn-primary btn-lg hero-cta" href="{% url 'quizzes:catalog' %}">
+                        Jelajahi kuis <span aria-hidden="true">&rarr;</span>
+                    </a>
+                    <a class="hero-secondary-link" href="{% url 'quizzes:register' %}">
+                        Buat akun gratis
+                    </a>
+                </div>
+                <div class="hero-note">
+                    <span class="hero-note-mark" aria-hidden="true">✓</span>
+                    <span>Belajar santai, berkembang setiap hari.</span>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="hero-visual" aria-hidden="true">
+                    <div class="hero-orbit hero-orbit-one"></div>
+                    <div class="hero-orbit hero-orbit-two"></div>
+                    <div class="floating-shape floating-shape-star">✦</div>
+                    <div class="floating-shape floating-shape-dot"></div>
+                    <div class="hero-feature-card">
+                        <div class="hero-card-top">
+                            <span class="hero-card-brand"><span>Q</span> QUIZIFY</span>
+                            <span class="hero-card-tag">YOUR NEXT CHALLENGE</span>
+                        </div>
+                        <div class="hero-card-symbol">?</div>
+                        <p class="hero-card-caption">Rasa ingin tahu membawamu</p>
+                        <h2>ke level<br>berikutnya.</h2>
+                        <div class="hero-card-steps">
+                            <span class="step-active">01 <small>Pilih</small></span>
+                            <span>02 <small>Jawab</small></span>
+                            <span>03 <small>Tumbuh</small></span>
+                        </div>
+                    </div>
+                    <div class="floating-note floating-note-top">
+                        <span class="floating-note-icon">✧</span>
+                        Satu soal, satu langkah maju
+                    </div>
+                    <div class="floating-note floating-note-bottom">
+                        <span class="floating-note-check">✓</span>
+                        Siap untuk tantangan?
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="home-benefits">
+    <div class="container">
+        <div class="section-intro text-center">
+            <span class="eyebrow">MULAI DARI SINI</span>
+            <h2>Belajar lebih ringan, <span>tetap bermakna.</span></h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <article class="benefit-card">
+                    <span class="benefit-icon benefit-icon-lilac">01</span>
+                    <h3>Pilih tantanganmu</h3>
+                    <p>Temukan topik yang menarik dan mulai dari levelmu sendiri.</p>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <article class="benefit-card">
+                    <span class="benefit-icon benefit-icon-peach">02</span>
+                    <h3>Jawab dengan fokus</h3>
+                    <p>Kerjakan soal satu per satu dengan waktu yang terukur.</p>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <article class="benefit-card">
+                    <span class="benefit-icon benefit-icon-mint">03</span>
+                    <h3>Lihat progresmu</h3>
+                    <p>Skor dan riwayat tersimpan agar kamu bisa melihat hasil belajarmu.</p>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

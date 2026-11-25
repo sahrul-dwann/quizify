@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Riwayat kuis - Quizify{% endblock %}
+
+{% block content %}
+<section class="history-section">
+    <div class="container">
+        <div class="history-heading">
+            <div>
+                <span class="eyebrow">PROGRES BELAJARMU</span>
+                <h1 class="section-title">Riwayat <span>pengerjaan.</span></h1>
+                <p class="section-copy">Setiap kuis yang kamu selesaikan adalah langkah maju.</p>
+            </div>
+            <a class="btn btn-primary" href="{% url 'quizzes:catalog' %}">Cari kuis <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        {% if attempts %}
+            <div class="history-list">
+                {% for attempt in attempts %}
+                    <article class="history-card">
+                        <div class="history-card-mark" aria-hidden="true">Q</div>
+                        <div class="history-card-title">
+                            <h2>{{ attempt.quiz.title }}</h2>
+                            <span>{{ attempt.completed_at|date:"d M Y, H:i" }}</span>
+                        </div>
+                        <div class="history-score">
+                            <strong>{{ attempt.score }}<span>/{{ attempt.total_questions }}</span></strong>
+                            <span>SKOR</span>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <span class="empty-state-icon" aria-hidden="true">↗</span>
+                <h2>Perjalananmu dimulai di sini</h2>
+                <p>Kuis yang selesai kamu kerjakan akan muncul di halaman ini.</p>
+                <a class="btn btn-primary" href="{% url 'quizzes:catalog' %}">Jelajahi kuis</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
