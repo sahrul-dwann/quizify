@@ -153,6 +153,8 @@ class QuizTakingTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'data-remaining-seconds="600"')
+        self.assertContains(response, 'class="take-sidebar"')
+        self.assertContains(response, 'aria-label="Timer dan navigasi soal"')
         self.assertContains(
             response,
             f'data-question-target="question_{self.question_one.pk}"',

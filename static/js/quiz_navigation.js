@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const saveStatus = document.querySelector('[data-save-status]');
     const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
     const navigationButtons = form.querySelectorAll('[data-question-target]');
+    const questionCards = form.querySelectorAll('.question-card[id]');
     let pendingSaves = Promise.resolve();
     let saveFailed = false;
     let isFinishing = false;
@@ -29,6 +30,42 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     }
 
+    function markCurrent(question) {
+        navigationButtons.forEach(function (button) {
+            button.classList.remove('is-current');
+            button.removeAttribute('aria-current');
+        });
+
+        const currentButton = form.querySelector(
+            `[data-question-target="${question.id}"]`,
+        );
+        if (currentButton) {
+            currentButton.classList.add('is-current');
+            currentButton.setAttribute('aria-current', 'step');
+        }
+    }
+
+    if (questionCards.length > 0) {
+        markCurrent(questionCards[0]);
+        const questionObserver = new IntersectionObserver(function (entries) {
+            const visibleQuestions = entries
+                .filter(function (entry) {
+                    return entry.isIntersecting;
+                })
+                .sort(function (first, second) {
+                    return first.boundingClientRect.top - second.boundingClientRect.top;
+                });
+            if (visibleQuestions.length > 0) {
+                markCurrent(visibleQuestions[0].target);
+            }
+        }, {
+            rootMargin: '-230px 0px -180px 0px',
+        });
+        questionCards.forEach(function (question) {
+            questionObserver.observe(question);
+        });
+    }
+
     navigationButtons.forEach(function (button) {
         button.addEventListener('click', function () {
             const target = document.getElementById(button.dataset.questionTarget);
@@ -36,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            markCurrent(target);
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             target.focus({ preventScroll: true });
         });
