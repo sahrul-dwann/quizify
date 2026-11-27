@@ -37,7 +37,7 @@ Sebelum implementasi, tentukan minimal: siapa yang membuat kuis, siapa yang meng
 - Gunakan Django Templates untuk rendering halaman.
 - Gunakan Bootstrap 5 untuk styling dan responsive layout.
 - Gunakan JavaScript untuk interaksi seperti timer dan navigasi soal.
-- Setiap kuis memiliki batas waktu tetap 10 menit; timer dimulai saat peserta memulai kuis dan mengirim jawaban tersimpan saat waktu habis.
+- Setiap kuis memiliki batas waktu yang dapat diatur (default 10 menit); timer dimulai saat peserta memulai kuis dan mengirim jawaban tersimpan saat waktu habis.
 - Gunakan template inheritance dengan `base.html`.
 - Pisahkan file CSS dan JavaScript ke folder `static`.
 - Jangan menggunakan React atau frontend framework terpisah kecuali diminta secara eksplisit.

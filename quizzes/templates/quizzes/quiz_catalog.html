@@ -27,7 +27,7 @@
                             <span class="quiz-card-spark" aria-hidden="true">✦</span>
                         </div>
                         <div class="card-body quiz-card-body">
-                            <span class="quiz-meta">{{ quiz.question_count }} SOAL <span aria-hidden="true">·</span> 10 MENIT</span>
+                            <span class="quiz-meta">{{ quiz.question_count }} SOAL <span aria-hidden="true">·</span> {{ quiz.duration_minutes }} MENIT</span>
                             <h2 class="card-title">{{ quiz.title }}</h2>
                             {% if quiz.description %}
                                 <p class="card-text quiz-description">{{ quiz.description }}</p>

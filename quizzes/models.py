@@ -6,6 +6,7 @@ from django.utils import timezone
 class Quiz(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+    duration_minutes = models.PositiveIntegerField(default=10)
     is_published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

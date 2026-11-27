@@ -14,9 +14,6 @@ from django.views.decorators.http import require_GET, require_http_methods, requ
 from .forms import RegistrationForm
 from .models import AnswerOption, Question, Quiz, QuizAttempt
 
-QUIZ_DURATION = timedelta(minutes=10)
-
-
 def _attempt_session_key(attempt):
     return f'quiz_attempt_{attempt.pk}'
 
@@ -74,7 +71,7 @@ def _render_attempt(request, attempt, form_error=None):
         for question_id in data['question_ids']
         if question_id in questions_by_id
     ]
-    deadline = attempt.started_at + QUIZ_DURATION
+    deadline = attempt.started_at + timedelta(minutes=attempt.quiz.duration_minutes)
     remaining_seconds = max(0, ceil((deadline - timezone.now()).total_seconds()))
     remaining_time = (
         f'{remaining_seconds // 60:02d}:{remaining_seconds % 60:02d}'
@@ -174,7 +171,9 @@ def take_quiz(request, attempt_id):
     )
     if attempt.completed_at is not None:
         return redirect('quizzes:attempt_result', attempt_id=attempt.pk)
-    if timezone.now() >= attempt.started_at + QUIZ_DURATION:
+    if timezone.now() >= attempt.started_at + timedelta(
+        minutes=attempt.quiz.duration_minutes
+    ):
         _complete_attempt(request, attempt)
         return redirect('quizzes:attempt_result', attempt_id=attempt.pk)
     return _render_attempt(request, attempt)
@@ -190,7 +189,9 @@ def save_attempt_answer(request, attempt_id):
     )
     if attempt.completed_at is not None:
         return HttpResponse(status=409)
-    if timezone.now() >= attempt.started_at + QUIZ_DURATION:
+    if timezone.now() >= attempt.started_at + timedelta(
+        minutes=attempt.quiz.duration_minutes
+    ):
         _complete_attempt(request, attempt)
         return HttpResponse(status=410)
 
@@ -225,7 +226,9 @@ def finish_attempt(request, attempt_id):
     )
     if attempt.completed_at is not None:
         return redirect('quizzes:attempt_result', attempt_id=attempt.pk)
-    if timezone.now() >= attempt.started_at + QUIZ_DURATION:
+    if timezone.now() >= attempt.started_at + timedelta(
+        minutes=attempt.quiz.duration_minutes
+    ):
         _complete_attempt(request, attempt)
         return redirect('quizzes:attempt_result', attempt_id=attempt.pk)
 

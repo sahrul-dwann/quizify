@@ -34,9 +34,7 @@ class QuizCatalogTests(TestCase):
         self.assertNotContains(response, 'Kuis draft')
 
     def test_catalog_shows_empty_state_when_no_quizzes_are_published(self):
-        Quiz.objects.filter(
-            title='Pemrograman Dasar hingga Menengah',
-        ).update(is_published=False)
+        Quiz.objects.update(is_published=False)
         response = self.client.get(reverse('quizzes:catalog'))
 
         self.assertEqual(response.status_code, 200)
@@ -54,6 +52,27 @@ class SeededQuizTests(TestCase):
             options = list(question.options.all())
             self.assertEqual(len(options), 4)
             self.assertEqual(sum(option.is_correct for option in options), 1)
+
+    def test_javascript_basic_quiz_has_twenty_questions_and_fifteen_minute_limit(self):
+        quiz = Quiz.objects.get(title='JavaScript Basic')
+        questions = list(quiz.questions.prefetch_related('options'))
+
+        self.assertTrue(quiz.is_published)
+        self.assertEqual(quiz.duration_minutes, 15)
+        self.assertEqual(len(questions), 20)
+        for question in questions:
+            options = list(question.options.all())
+            self.assertEqual(len(options), 4)
+            self.assertEqual(sum(option.is_correct for option in options), 1)
+
+        response = self.client.get(
+            reverse('quizzes:quiz_detail', args=[quiz.pk])
+        )
+        self.assertContains(response, '<strong>15</strong> menit', html=True)
+
+        response = self.client.get(reverse('quizzes:catalog'))
+        self.assertContains(response, '20 SOAL')
+        self.assertContains(response, '15 MENIT')
 
 
 class QuizTakingTests(TestCase):
@@ -142,6 +161,39 @@ class QuizTakingTests(TestCase):
             response,
             f'data-question-target="question_{self.question_two.pk}"',
         )
+
+    def test_javascript_quiz_uses_its_fifteen_minute_duration(self):
+        quiz = Quiz.objects.get(title='JavaScript Basic')
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse('quizzes:start_quiz', args=[quiz.pk])
+        )
+        attempt = QuizAttempt.objects.get(user=self.user, quiz=quiz)
+
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get(
+            reverse('quizzes:take_quiz', args=[attempt.pk])
+        )
+        self.assertContains(response, 'data-remaining-seconds="900"')
+
+        attempt.started_at = timezone.now() - timedelta(minutes=14)
+        attempt.save(update_fields=('started_at',))
+        response = self.client.get(
+            reverse('quizzes:take_quiz', args=[attempt.pk])
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'data-remaining-seconds="60"')
+
+        attempt.started_at = timezone.now() - timedelta(minutes=16)
+        attempt.save(update_fields=('started_at',))
+        response = self.client.get(
+            reverse('quizzes:take_quiz', args=[attempt.pk])
+        )
+
+        self.assertEqual(response.status_code, 302)
+        attempt.refresh_from_db()
+        self.assertIsNotNone(attempt.completed_at)
 
     def test_reloading_quiz_page_does_not_reset_timer(self):
         self.client.force_login(self.user)

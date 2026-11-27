@@ -16,7 +16,7 @@
                 {% if question_count %}
                     <div class="quiz-facts">
                         <span><strong>{{ question_count }}</strong> pertanyaan</span>
-                        <span><strong>10</strong> menit</span>
+                        <span><strong>{{ quiz.duration_minutes }}</strong> menit</span>
                         <span><strong>1</strong> poin per jawaban benar</span>
                     </div>
                     {% if user.is_authenticated %}
